@@ -1,8 +1,13 @@
 from uteis.banco import iniciar_banco
-from uteis.banco import cadastrar_usuario, login_usuario
+from uteis.banco import buscar_id
+from uteis.banco import pegar_senha_cripto
+from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
 from uteis.uteis import cripto_senha
+from uteis.uteis import descripto_senha
+from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import salvar_cadastro_json
+
 
 class Usuario:
     def __init__(self, usuario, senha):
@@ -12,7 +17,7 @@ class Usuario:
     def para_dict(self):
         return {
             "usuario": self.usuario,
-            "senha": self.senha
+            "chave_senha": self.senha
         }
 
 class Entrada:
@@ -47,26 +52,38 @@ if __name__ == "__main__":
         nome_usuario = input('Qual e o seu nome de usuario: ').strip()
         senha = input('Digite sua senha: ').strip()
 
-        id_logado = login_usuario(conexao, nome_usuario, senha)
-        
+        id_logado = buscar_id(conexao, nome_usuario)
+
         if id_logado is not None:
-            print("\n[+] Login realizado com sucesso!")
+            chave_descripto = pegar_chave_usuario(nome_usuario)
+            senha_cripto = pegar_senha_cripto(conexao, id_logado)
+            senha_descripto = descripto_senha(senha_cripto, chave_descripto)
+
+            if senha == senha_descripto:
+               while True: 
+                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Sair, deslogar')
+                if ask2 == '1':
+                    valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
+                    entrada = Entrada(valor)
+
+                    adicionar_saldo(conexao, id_logado, entrada.valor)
+
+                elif ask2 == '2':
+                    valor = float(input('\nQuanto voce deseja retirar da sua conta: '))
+                    retirar = Saida(valor)
+
+                    retirar_saldo(conexao, id_logado, retirar.valor)
+
+                elif ask2 == '3':
+                    break
+
+            else:
+                print("\n[-] Erro: Usuário ou senha incorretos.")
+
             
-            ask2 = input(f'Olá {nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo \n(2)Retirar dinherio ')
-            if ask2 == '1':
-                valor = float(input('Quanto voce deseja adicionar a sua conta: '))
-                entrada = Entrada(valor)
 
-                adicionar_saldo(conexao, id_logado, entrada.valor)
-
-            elif ask2 == '2':
-                valor = float(input('Quanto voce deseja retirar da sua conta: '))
-                retirar = Saida(valor)
-
-                retirar_saldo(conexao, id_logado, retirar.valor)
-
-        else:
-            print("\n[-] Erro: Usuário ou senha incorretos.")
+            
+        
 
 
 

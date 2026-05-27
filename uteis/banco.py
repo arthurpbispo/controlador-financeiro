@@ -35,17 +35,6 @@ def cadastrar_usuario(conexao, usuario, senha):
     except sqlite3.IntegrityError:
         print('\nErro: Este nome ja existe')
 
-def login_usuario(conexao, usuario, senha):
-    cursor = conexao.cursor()
-    
-    cursor.execute("SELECT id, usuario, saldo FROM usuarios WHERE usuario = ? AND senha = ?", (usuario, senha))
-    
-    resultado = cursor.fetchone()
-
-    if resultado:
-        return resultado[0]
-    return None
-
 def adicionar_saldo(conexao, id_usuario, valor):
     cursor = conexao.cursor()
 
@@ -61,6 +50,32 @@ def retirar_saldo(conexao, id_usuario, valor):
 
     conexao.commit()
     print(f'\n O valor de {valor} foi retirado da sua conta')
+
+def buscar_id(conexao, nome_usuario):
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT id FROM usuarios WHERE usuario = ?", (nome_usuario,))
+    resultado = cursor.fetchone()   
+
+    if resultado:
+        usuario_id = resultado[0]
+        return usuario_id
+    else:
+        print('Usuario nao encontrado')
+        return None
+    
+def pegar_senha_cripto(conexao, id_logado):
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT senha FROM usuarios WHERE id = ? ", (id_logado,))
+    resultado = cursor.fetchone()
+
+    if resultado:
+        chave_cripto = resultado[0]
+        return chave_cripto
+    else:
+        return None
+
 
 
 
