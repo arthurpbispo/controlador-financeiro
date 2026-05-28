@@ -75,6 +75,18 @@ def pegar_senha_cripto(conexao, id_logado):
         return chave_cripto
     else:
         return None
+    
+def to_historico_transacoes(conexao, id_logado, valor, descricao, data):
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+      INSERT INTO transacoes (
+      usuario_id, valor, descricao, data)
+      VALUES (?, ?, ?, ?)
+    """, (id_logado, valor, descricao, data)) 
+    
+    conexao.commit()
+
 
 
 

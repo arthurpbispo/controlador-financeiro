@@ -3,10 +3,12 @@ from uteis.banco import buscar_id
 from uteis.banco import pegar_senha_cripto
 from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
+from uteis.banco import to_historico_transacoes
 from uteis.uteis import cripto_senha
 from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import salvar_cadastro_json
+from uteis.uteis import data_atual
 
 
 class Usuario:
@@ -21,8 +23,13 @@ class Usuario:
         }
 
 class Entrada:
-    def __init__(self, valor):
+    def __init__(self, id, usuario, valor, descricao, data):
+        self.id = id
+        self.usuario = usuario
         self.valor = valor
+        self.descricao = descricao
+        self.data = data
+        
 
 class Saida:
     def __init__(self, valor):
@@ -64,9 +71,14 @@ if __name__ == "__main__":
                 ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Sair, deslogar')
                 if ask2 == '1':
                     valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
-                    entrada = Entrada(valor)
+                    descricao = input('\nDe uma descricao a sua transacao: ')
+                    data = data_atual
+                    entrada = Entrada(id_logado, nome_usuario, valor, descricao, data)
 
                     adicionar_saldo(conexao, id_logado, entrada.valor)
+                    to_historico_transacoes(conexao, id_logado, entrada.valor, entrada.descricao, entrada.data())
+
+
 
                 elif ask2 == '2':
                     valor = float(input('\nQuanto voce deseja retirar da sua conta: '))

@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 from cryptography.fernet import Fernet
 
 def cripto_senha(usuario ,senha):
@@ -54,3 +55,10 @@ def descripto_senha(senha_cripto, chave_descripto):
     senha_descriptografada_bytes = fernet.decrypt(senha_cripto_bytes)
 
     return senha_descriptografada_bytes.decode("utf-8")
+
+def data_atual():
+    hoje = datetime.now()
+    data = hoje.strftime('%d/%m/%y')
+
+    return data
+
