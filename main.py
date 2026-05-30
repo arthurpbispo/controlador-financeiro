@@ -9,6 +9,7 @@ from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import salvar_cadastro_json
 from uteis.uteis import data_atual
+from uteis.uteis import to_excel
 
 
 class Usuario:
@@ -109,7 +110,16 @@ if __name__ == "__main__":
                         data = transacao[5]
 
                         print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
-                                                                            
+
+                    ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim \n(2)Nao'))   
+
+                    if ask3 == 1:
+                        to_excel(todas_as_transacoes)
+                        print('\nPlanilha (financas.xlsx) criada com sucesso')
+                    
+                    else:
+                        None
+
                 elif ask2 == '4':
                     break
 

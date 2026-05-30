@@ -1,5 +1,6 @@
 import os
 import json
+import pandas as pd
 from datetime import datetime
 from cryptography.fernet import Fernet
 
@@ -61,4 +62,24 @@ def data_atual():
     data = hoje.strftime('%d/%m/%y')
 
     return data
+
+def to_excel(todas_as_transacoes):
+    pre_df = {
+        'tipo': [],
+        'valor': [],
+        'descricao': [],
+        'data': []
+    }
+    
+    for transacao in todas_as_transacoes:
+        pre_df['tipo'].append(transacao[2])
+        pre_df['valor'].append(transacao[3])
+        pre_df['descricao'].append(transacao[4])
+        pre_df['data'].append(transacao[5])
+
+    df = pd.DataFrame(pre_df)
+    
+    df.index += 1
+    df.to_excel('Financas.xlsx')
+
 
