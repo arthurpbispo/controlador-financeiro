@@ -3,7 +3,7 @@ from uteis.banco import buscar_id
 from uteis.banco import pegar_senha_cripto
 from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
-from uteis.banco import to_historico_transacoes
+from uteis.banco import to_historico_transacoes, pegar_historico_transacoes
 from uteis.uteis import cripto_senha
 from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
@@ -23,17 +23,23 @@ class Usuario:
         }
 
 class Entrada:
-    def __init__(self, id, usuario, valor, descricao, data):
+    def __init__(self, id, usuario, tipo, valor, descricao, data):
         self.id = id
         self.usuario = usuario
+        self.tipo = tipo
         self.valor = valor
         self.descricao = descricao
         self.data = data
         
 
 class Saida:
-    def __init__(self, valor):
+    def __init__(self, id, usuario, tipo, valor, descricao, data):
+        self.id = id
+        self.usuario = usuario
+        self.tipo = tipo
         self.valor = valor
+        self.descricao = descricao
+        self.data = data
         
         
 if __name__ == "__main__":
@@ -68,25 +74,43 @@ if __name__ == "__main__":
 
             if senha == senha_descripto:
                while True: 
-                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Sair, deslogar')
+                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Sair, deslogar')
                 if ask2 == '1':
                     valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
                     descricao = input('\nDe uma descricao a sua transacao: ')
-                    data = data_atual
-                    entrada = Entrada(id_logado, nome_usuario, valor, descricao, data)
+                    data = data_atual()
+                    tipo = 'entrada'
+
+                    entrada = Entrada(id_logado, nome_usuario, tipo, valor, descricao, data)    
 
                     adicionar_saldo(conexao, id_logado, entrada.valor)
-                    to_historico_transacoes(conexao, id_logado, entrada.valor, entrada.descricao, entrada.data())
+                    to_historico_transacoes(conexao, id_logado, entrada.tipo, entrada.valor, entrada.descricao, entrada.data)
 
 
 
                 elif ask2 == '2':
                     valor = float(input('\nQuanto voce deseja retirar da sua conta: '))
-                    retirar = Saida(valor)
+                    descricao = input('\nDe um descricao a sua transacao: ')
+                    data = data_atual()
+                    tipo = 'saida'
+                    
+                    retirar = Saida(id_logado, nome_usuario, tipo, valor, descricao, data)
 
                     retirar_saldo(conexao, id_logado, retirar.valor)
+                    to_historico_transacoes(conexao, id_logado, tipo, retirar.valor, retirar.descricao, retirar.data)
 
                 elif ask2 == '3':
+                    todas_as_transacoes = pegar_historico_transacoes(conexao, id_logado)
+                    
+                    for transacao in todas_as_transacoes:
+                        tipo = transacao[2]
+                        valor = transacao[3]
+                        descricao = transacao[4]
+                        data = transacao[5]
+
+                        print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
+                                                                            
+                elif ask2 == '4':
                     break
 
             else:

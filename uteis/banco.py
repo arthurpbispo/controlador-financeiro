@@ -76,16 +76,24 @@ def pegar_senha_cripto(conexao, id_logado):
     else:
         return None
     
-def to_historico_transacoes(conexao, id_logado, valor, descricao, data):
+def to_historico_transacoes(conexao, id_logado, tipo, valor, descricao, data,):
     cursor = conexao.cursor()
 
     cursor.execute("""
       INSERT INTO transacoes (
-      usuario_id, valor, descricao, data)
-      VALUES (?, ?, ?, ?)
-    """, (id_logado, valor, descricao, data)) 
+      usuario_id, tipo, valor, descricao, data)
+      VALUES (?, ?, ?, ?, ?)
+    """, (id_logado, tipo, valor, descricao, data)) 
     
     conexao.commit()
+
+def pegar_historico_transacoes(conexao, id_logado):
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM transacoes WHERE usuario_id = ?", (id_logado,))
+    resultado = cursor.fetchall()
+
+    return resultado
 
 
 
