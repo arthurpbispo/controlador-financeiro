@@ -95,6 +95,34 @@ def pegar_historico_transacoes(conexao, id_logado):
 
     return resultado
 
+def extrato_dict_to_SQL(conexao , id_logado, extrato_dict):
+    cursor = conexao.cursor()
+
+    for linha_extrato in extrato_dict:
+        valor_absoluto = abs(float(linha_extrato['Valor']))
+
+        data = linha_extrato['Data']
+
+        Descricao_e_tipo = linha_extrato['Descrição']
+
+        if ' - ' in Descricao_e_tipo:
+            tipo, descricao = Descricao_e_tipo.split(' - ', 1)
+        else:
+            tipo = Descricao_e_tipo
+            descricao = Descricao_e_tipo  
+
+        usuario_id = id_logado
+
+        cursor.execute("""
+          INSERT INTO transacoes (
+          usuario_id, tipo, valor, descricao, data)
+          VALUES (?, ?, ?, ?, ?)
+        """, (id_logado, tipo, valor_absoluto, descricao, data))
+
+        conexao.commit()
+
+
+
 
 
 
