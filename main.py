@@ -3,13 +3,14 @@ from uteis.banco import buscar_id
 from uteis.banco import pegar_senha_cripto
 from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
+from uteis.banco import extrato_dict_to_SQL
 from uteis.banco import to_historico_transacoes, pegar_historico_transacoes
 from uteis.uteis import cripto_senha
 from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import salvar_cadastro_json
 from uteis.uteis import data_atual
-from uteis.uteis import to_excel
+from uteis.uteis import to_excel, extrato_to_dict
 
 
 class Usuario:
@@ -75,7 +76,7 @@ if __name__ == "__main__":
 
             if senha == senha_descripto:
                while True: 
-                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Sair, deslogar')
+                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Sair, deslogar')
                 if ask2 == '1':
                     valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
                     descricao = input('\nDe uma descricao a sua transacao: ')
@@ -121,6 +122,12 @@ if __name__ == "__main__":
                         None
 
                 elif ask2 == '4':
+                    caminho_arquivo = input('Passe o caminho do arquivo do seu extrato: ')
+                    
+                    extrato_dict = extrato_to_dict(caminho_arquivo)
+                    extrato_dict_to_SQL(conexao, id_logado, extrato_dict)
+
+                elif ask2 == '5':
                     break
 
             else:
