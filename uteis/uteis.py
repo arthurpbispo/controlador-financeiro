@@ -82,12 +82,4 @@ def to_excel(todas_as_transacoes):
     df.index += 1
     df.to_excel('Financas.xlsx')
 
-def extrato_to_dict():
-    caminho_arquivo = 'extrato_nubank.csv'
-
-    df = pd.read_csv(caminho_arquivo, encoding='utf-8')
-    df_dict = df.to_dict(orient='records')
-
-    return df_dict
-
 
