@@ -24,14 +24,15 @@
 
 # data_atual()
 
-lista = [
-    (1, 42, "entrada", 150.00, "Freelance", "2026-05-29"),
-    (2, 42, "saida", 50.0, "Supermercado", "2026-05-29")
-]
+# lista = [
+#     (1, 42, "entrada", 150.00, "Freelance", "2026-05-29"),
+#     (2, 42, "saida", 50.0, "Supermercado", "2026-05-29")
+# ]
 
-for transacao in lista:
-    valor = transacao[3]
-    print(valor)
+# for transacao in lista:
+#     valor = transacao[3]
+#     print(valor)
+
 
 
 

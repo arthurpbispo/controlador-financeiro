@@ -88,4 +88,3 @@ def extrato_to_dict(caminho_arquivo):
 
     return df_dict
 
-

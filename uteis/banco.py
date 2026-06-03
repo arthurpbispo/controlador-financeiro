@@ -11,7 +11,8 @@ def iniciar_banco():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario TEXT UNIQUE NOT NULL,
         senha TEXT NOT NULL,
-        saldo REAL DEFAULT 0.0
+        saldo REAL DEFAULT 0.0,
+        limite REAL DEFAULT 0.0
     )""")
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS transacoes (
@@ -95,7 +96,7 @@ def pegar_historico_transacoes(conexao, id_logado):
 
     return resultado
 
-def extrato_dict_to_SQL(conexao , id_logado, extrato_dict):
+def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
     cursor = conexao.cursor()
 
     for linha_extrato in extrato_dict:
@@ -111,8 +112,6 @@ def extrato_dict_to_SQL(conexao , id_logado, extrato_dict):
             tipo = Descricao_e_tipo
             descricao = Descricao_e_tipo  
 
-        usuario_id = id_logado
-
         cursor.execute("""
           INSERT INTO transacoes (
           usuario_id, tipo, valor, descricao, data)
@@ -120,6 +119,64 @@ def extrato_dict_to_SQL(conexao , id_logado, extrato_dict):
         """, (id_logado, tipo, valor_absoluto, descricao, data))
 
         conexao.commit()
+
+def adicionar_limite(conexao, novo_limite, id_logado):
+    cursor = conexao.cursor()
+
+    if novo_limite is None:
+        print('O limite nao possui valor')
+    
+    else:
+        cursor.execute("UPDATE usuarios SET limite = ? WHERE id = ?", (novo_limite, id_logado))
+        print('\nLimite adicionado com sucesso')
+
+        conexao.commit()
+
+def aviso_limite(conexao, id_logado, nome_usuario):
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT tipo, valor FROM transacoes WHERE usuario_id = ?", (id_logado,))
+
+    transacoes = cursor.fetchall()
+
+    data = {
+        'tipo': [],
+        'valor': []
+    }
+
+    soma_dos_valores = 0
+
+    for i, (tipo, valor) in enumerate(transacoes):
+        data['tipo'].append(tipo)
+        data['valor'].append(valor)
+
+        tipo_minusculo = tipo.lower()
+        
+        if 'enviada' in tipo_minusculo or 'compra' in tipo_minusculo or 'saida' in tipo_minusculo:
+            soma_dos_valores += valor
+        
+    cursor.execute("SELECT limite FROM usuarios WHERE usuario = ?", (nome_usuario,))
+    limite_usuario = cursor.fetchone()
+
+    soma_dos_valores_int = int(soma_dos_valores)
+    limite_usuario_int = int(limite_usuario[0]) 
+
+    try:
+        porcentagem = soma_dos_valores_int/limite_usuario_int * 100
+
+    except ZeroDivisionError:
+        print('O usuario nao possui limite')
+        porcentagem = 0
+    
+    if porcentagem >= 100:
+        return True
+    else:
+        return False
+
+    
+
+
+
 
 
 

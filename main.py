@@ -3,7 +3,8 @@ from uteis.banco import buscar_id
 from uteis.banco import pegar_senha_cripto
 from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
-from uteis.banco import extrato_dict_to_SQL
+from uteis.banco import extrato_dict_to_SQL_nubank
+from uteis.banco import adicionar_limite, aviso_limite
 from uteis.banco import to_historico_transacoes, pegar_historico_transacoes
 from uteis.uteis import cripto_senha
 from uteis.uteis import descripto_senha
@@ -75,8 +76,16 @@ if __name__ == "__main__":
             senha_descripto = descripto_senha(senha_cripto, chave_descripto)
 
             if senha == senha_descripto:
+               usuario_limite = aviso_limite(conexao, id_logado, nome_usuario)
+
+               if usuario_limite:
+                   print('\nVoce estrapolou o limite salvo')
+               else:
+                   None
+               
+
                while True: 
-                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Sair, deslogar')
+                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Adicionar ou alterar limite da conta \n(6)Sair, deslogar')
                 if ask2 == '1':
                     valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
                     descricao = input('\nDe uma descricao a sua transacao: ')
@@ -125,9 +134,13 @@ if __name__ == "__main__":
                     caminho_arquivo = input('Passe o caminho do arquivo do seu extrato: ')
                     
                     extrato_dict = extrato_to_dict(caminho_arquivo)
-                    extrato_dict_to_SQL(conexao, id_logado, extrato_dict)
-
+                    extrato_dict_to_SQL_nubank(conexao, id_logado, extrato_dict)
+                        
                 elif ask2 == '5':
+                    novo_limite = float(input('\nQual limite voce deseja adicionar a sua conta: '))
+                    adicionar_limite(conexao, novo_limite, id_logado)
+
+                elif ask2 == '6':
                     break
 
             else:
