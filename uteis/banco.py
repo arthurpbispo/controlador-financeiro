@@ -169,22 +169,9 @@ def aviso_limite(conexao, id_logado, nome_usuario):
         porcentagem = 0
     
     if porcentagem >= 100:
-        return True
+        return True, soma_dos_valores_int
     else:
-        return False
-
+        return False, soma_dos_valores_int
     
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 

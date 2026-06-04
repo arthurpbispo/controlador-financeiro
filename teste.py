@@ -33,6 +33,39 @@
 #     valor = transacao[3]
 #     print(valor)
 
+# from uteis.banco import iniciar_banco
+
+# conexao = iniciar_banco()
+
+# cursor = conexao.cursor()
+
+# cursor.execute("SELECT tipo, valor FROM transacoes WHERE usuario_id = ?", (1,))
+
+# transacoes = cursor.fetchall()
+
+# data = {
+#         'tipo': [],
+#         'valor': []
+# }
+
+# soma_dos_valores = 0
+
+# for i, (tipo, valor) in enumerate(transacoes):
+#     data['tipo'].append(tipo)
+#     data['valor'].append(valor)
+
+#     tipo_minusculo = tipo.lower()
+        
+#     soma_dos_valores += valor
+
+# print(soma_dos_valores)
+
+
+    
+
+
+
+
 
 
 

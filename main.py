@@ -9,6 +9,7 @@ from uteis.banco import to_historico_transacoes, pegar_historico_transacoes
 from uteis.uteis import cripto_senha
 from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
+from uteis.uteis import analise_extrato
 from uteis.uteis import salvar_cadastro_json
 from uteis.uteis import data_atual
 from uteis.uteis import to_excel, extrato_to_dict
@@ -76,13 +77,10 @@ if __name__ == "__main__":
             senha_descripto = descripto_senha(senha_cripto, chave_descripto)
 
             if senha == senha_descripto:
-               usuario_limite = aviso_limite(conexao, id_logado, nome_usuario)
+               usuario_limite, soma_dos_gastos = aviso_limite(conexao, id_logado, nome_usuario)
 
                if usuario_limite:
-                   print('\nVoce estrapolou o limite salvo')
-               else:
-                   None
-               
+                   print(f'\nVoce estrapolou o limite salvo, voce gastou {soma_dos_gastos}')
 
                while True: 
                 ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Adicionar ou alterar limite da conta \n(6)Sair, deslogar')
@@ -134,6 +132,9 @@ if __name__ == "__main__":
                     caminho_arquivo = input('Passe o caminho do arquivo do seu extrato: ')
                     
                     extrato_dict = extrato_to_dict(caminho_arquivo)
+
+                    analise_extrato(extrato_dict)
+
                     extrato_dict_to_SQL_nubank(conexao, id_logado, extrato_dict)
                         
                 elif ask2 == '5':

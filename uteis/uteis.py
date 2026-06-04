@@ -88,3 +88,19 @@ def extrato_to_dict(caminho_arquivo):
 
     return df_dict
 
+def analise_extrato(extrato_dict):
+    soma_dos_valores_entrada = 0
+    soma_dos_valores_saida = 0    
+
+    for i in extrato_dict:
+        descricao_minuscula = i['Descrição'].lower()
+
+        if 'compra' in descricao_minuscula or 'enviada' in descricao_minuscula:
+            soma_dos_valores_saida += i['Valor']
+
+        else:
+            soma_dos_valores_entrada += i['Valor']
+
+    print(f'\nNesse extrato voce fez essas transacoes Entrada: {soma_dos_valores_entrada:.2f} Saida: {soma_dos_valores_saida:.2f}')
+            
+
