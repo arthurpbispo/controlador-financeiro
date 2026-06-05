@@ -12,7 +12,7 @@ from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import analise_extrato
 from uteis.uteis import salvar_cadastro_json
 from uteis.uteis import data_atual
-from uteis.uteis import to_excel, extrato_to_dict
+from uteis.uteis import to_excel, to_pdf, extrato_to_dict
 
 
 class Usuario:
@@ -119,14 +119,14 @@ if __name__ == "__main__":
 
                         print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
 
-                    ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim \n(2)Nao'))   
+                    ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim(Excel) \n(2)Sim(PDF) \n(3)Não'))   
 
                     if ask3 == 1:
                         to_excel(todas_as_transacoes)
                         print('\nPlanilha (financas.xlsx) criada com sucesso')
                     
-                    else:
-                        None
+                    elif ask3 == 2:
+                        to_pdf(todas_as_transacoes)
 
                 elif ask2 == '4':
                     caminho_arquivo = input('Passe o caminho do arquivo do seu extrato: ')

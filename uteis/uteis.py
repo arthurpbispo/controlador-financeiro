@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+from weasyprint import HTML
 from datetime import datetime
 from cryptography.fernet import Fernet
 
@@ -81,6 +82,27 @@ def to_excel(todas_as_transacoes):
     
     df.index += 1
     df.to_excel('Financas.xlsx')
+
+def to_pdf(todas_as_transacoes):
+    data = {
+        'tipo': [],
+        'valor': [],
+        'descricao': [],
+        'data': []
+    }
+
+    for transacao in todas_as_transacoes:
+        data['tipo'].append(transacao[2])
+        data['valor'].append(transacao[3])
+        data['descricao'].append(transacao[4])
+        data['data'].append(transacao[5])
+
+    df = pd.DataFrame(data)
+    
+    df_html = df.to_html(index=False, classes='table table-striped')
+    
+    HTML(string=df_html).write_pdf('Financas.pdf')
+
 
 def extrato_to_dict(caminho_arquivo):
     df = pd.read_csv(caminho_arquivo, encoding='utf-8')
