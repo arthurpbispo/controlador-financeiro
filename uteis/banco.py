@@ -99,6 +99,20 @@ def pegar_historico_transacoes(conexao, id_logado):
 def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
     cursor = conexao.cursor()
 
+    """
+    1. Logica para pegar todas as transacoes salvas no banco (lista de tuplas)
+
+    2. Tratar se nescessario
+
+    3. Dentro do for verificar cada linha do extrato dict verificar se existe alguma transacao igual
+
+    4. Se existir(Nao entra no banco) Se nao existir(Entra no banco)
+    """
+
+    cursor.execute("SELECT * FROM transacoes WHERE usuario_id = ?", (id_logado,))
+
+    transacoes_SQL_usuario = cursor.fetchall()
+
     for linha_extrato in extrato_dict:
         valor_absoluto = abs(float(linha_extrato['Valor']))
 
@@ -112,13 +126,28 @@ def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
             tipo = Descricao_e_tipo
             descricao = Descricao_e_tipo  
 
-        cursor.execute("""
-          INSERT INTO transacoes (
-          usuario_id, tipo, valor, descricao, data)
-          VALUES (?, ?, ?, ?, ?)
-        """, (id_logado, tipo, valor_absoluto, descricao, data))
+        achou_igual = True
 
-        conexao.commit()
+        for transacao in transacoes_SQL_usuario:
+
+            if (str(transacao[5]).strip() == str(data).strip() and
+                float(transacao[3]) == valor_absoluto and
+                str(transacao[2]).strip() == str(tipo).strip()
+            ):
+
+                achou_igual = False
+
+        if achou_igual:
+            cursor.execute("""
+                INSERT INTO transacoes (
+                    usuario_id, tipo, valor, descricao, data
+                ) VALUES (?, ?, ?, ?, ?)
+            """, (id_logado, tipo, valor_absoluto, descricao, data))
+        else:
+            print(f"Transação ignorada (já cadastrada no banco): {descricao}")
+
+
+    conexao.commit()
 
 def adicionar_limite(conexao, novo_limite, id_logado):
     cursor = conexao.cursor()

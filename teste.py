@@ -60,6 +60,38 @@
 
 # print(soma_dos_valores)
 
+# from uteis.banco import iniciar_banco
+
+# conexao = iniciar_banco()
+
+# cursor = conexao.cursor()
+
+# cursor.execute("SELECT * FROM transacoes WHERE usuario_id = ?", (1,))
+
+# transacoes = cursor.fetchall()
+
+# transcoes_SQL_usuario_dict = {
+#         'tipo': [],
+#         'valor': [],
+#         'data': []
+#     }
+
+# for transacao in transacoes:
+#     transcoes_SQL_usuario_dict['tipo'].append(transacao[2])
+#     transcoes_SQL_usuario_dict['valor'].append(transacao[3])
+#     transcoes_SQL_usuario_dict['data'].append(transacao[5])
+
+# print(transcoes_SQL_usuario_dict)
+
+import pandas as pd
+
+df = pd.read_csv('/home/arthur/Downloads/EXTRATO_2024.csv', encoding='utf-8')
+df_dict = df.to_dict(orient='records')
+
+print(df_dict)
+
+
+
 
     
 
