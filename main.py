@@ -4,6 +4,7 @@ from uteis.banco import pegar_senha_cripto
 from uteis.banco import cadastrar_usuario
 from uteis.banco import adicionar_saldo, retirar_saldo
 from uteis.banco import extrato_dict_to_SQL_nubank
+from uteis.banco import transacoes_entre_periodos
 from uteis.banco import adicionar_limite, aviso_limite
 from uteis.banco import to_historico_transacoes, pegar_historico_transacoes
 from uteis.uteis import cripto_senha
@@ -11,7 +12,7 @@ from uteis.uteis import descripto_senha
 from uteis.uteis import pegar_chave_usuario
 from uteis.uteis import analise_extrato
 from uteis.uteis import salvar_cadastro_json
-from uteis.uteis import data_atual
+from uteis.uteis import data_atual, tratar_data
 from uteis.uteis import to_excel, to_pdf, extrato_to_dict
 
 
@@ -121,7 +122,7 @@ if __name__ == "__main__":
                             descricao = transacao[4]
                             data = transacao[5]
 
-                        print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
+                            print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
 
                         ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim(Excel) \n(2)Sim(PDF) \n(3)Não'))   
 
@@ -135,6 +136,13 @@ if __name__ == "__main__":
                     elif ask4 == 2:
                         data_incial = input('Insira a data inical: ')
                         data_final = input('Isira a data final: ')
+
+                        data_inicial_tratada = tratar_data(data_incial)
+                        data_final_tratada = tratar_data(data_final)
+
+                        transacoes_entre_periodos(conexao, id_logado, data_inicial_tratada, data_final_tratada)
+
+
 
 
 

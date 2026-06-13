@@ -1,3 +1,9 @@
 1 - Adicionar elif as opcoes quando o usuario esta logado para Adicionar ou alterar um limite
 
 2 - Adicionar valor ao banco na tabela usuario  e coluna limite
+
+
+
+
+TESTE DATAS - INICIAL:  09/04/2026
+            - FINAL: 20/04/2026

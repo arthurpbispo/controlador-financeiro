@@ -204,5 +204,20 @@ def aviso_limite(conexao, id_logado, nome_usuario):
     else:
         return False, soma_dos_valores_int
     
+def transacoes_entre_periodos(conexao, id_logado, data_inicial_tratada, data_final_tratada):
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM transacoes WHERE usuario_id = ? AND data BETWEEN ? and ?", (id_logado, data_inicial_tratada, data_final_tratada)) 
+    transacoes = cursor.fetchall()
+
+    for transacao in transacoes:
+        valor = transacao[3]
+        descricao = transacao[4]
+        data = transacao[5]
+
+        print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
+        
+
+    
         
 
