@@ -1,4 +1,5 @@
 import sqlite3
+from uteis.uteis import tratar_data
 
 def iniciar_banco():
     conexao = sqlite3.connect("financas.db")
@@ -21,7 +22,7 @@ def iniciar_banco():
         tipo TEXT,
         valor REAL,
         descricao TEXT,
-        data TEXT,
+        data DATE,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
     conexao.commit()
@@ -117,6 +118,7 @@ def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
         valor_absoluto = abs(float(linha_extrato['Valor']))
 
         data = linha_extrato['Data']
+        data_to_banco = tratar_data(data)
 
         Descricao_e_tipo = linha_extrato['Descrição']
 
@@ -130,7 +132,7 @@ def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
 
         for transacao in transacoes_SQL_usuario:
 
-            if (str(transacao[5]).strip() == str(data).strip() and
+            if (str(transacao[5]).strip() == str(data_to_banco).strip() and
                 float(transacao[3]) == valor_absoluto and
                 str(transacao[2]).strip() == str(tipo).strip()
             ):
@@ -142,7 +144,7 @@ def extrato_dict_to_SQL_nubank(conexao , id_logado, extrato_dict):
                 INSERT INTO transacoes (
                     usuario_id, tipo, valor, descricao, data
                 ) VALUES (?, ?, ?, ?, ?)
-            """, (id_logado, tipo, valor_absoluto, descricao, data))
+            """, (id_logado, tipo, valor_absoluto, descricao, data_to_banco))
         else:
             print(f"Transação ignorada (já cadastrada no banco): {descricao}")
 
@@ -177,18 +179,18 @@ def aviso_limite(conexao, id_logado, nome_usuario):
 
     for i, (tipo, valor) in enumerate(transacoes):
         data['tipo'].append(tipo)
-        data['valor'].append(valor)
+        data['valor'].append(valor)  
 
         tipo_minusculo = tipo.lower()
         
         if 'enviada' in tipo_minusculo or 'compra' in tipo_minusculo or 'saida' in tipo_minusculo:
             soma_dos_valores += valor
-        
+    
     cursor.execute("SELECT limite FROM usuarios WHERE usuario = ?", (nome_usuario,))
     limite_usuario = cursor.fetchone()
 
     soma_dos_valores_int = int(soma_dos_valores)
-    limite_usuario_int = int(limite_usuario[0]) 
+    limite_usuario_int = int(limite_usuario[0])
 
     try:
         porcentagem = soma_dos_valores_int/limite_usuario_int * 100

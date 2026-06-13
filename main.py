@@ -24,7 +24,8 @@ class Usuario:
         return {
             "usuario": self.usuario,
             "chave_senha": self.senha
-        }
+        }     
+       
 
 class Entrada:
     def __init__(self, id, usuario, tipo, valor, descricao, data):
@@ -83,7 +84,7 @@ if __name__ == "__main__":
                    print(f'\nVoce estrapolou o limite salvo, voce gastou {soma_dos_gastos}')
 
                while True: 
-                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver todas as suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Adicionar ou alterar limite da conta \n(6)Sair, deslogar')
+                ask2 = input(f'\n{nome_usuario}, o que voce deseja fazer \n(1)Adicionar saldo:  \n(2)Retirar dinherio: \n(3)Ver suas transacoes: \n(4)Adicionar extrato de banco: \n(5)Adicionar ou alterar limite da conta \n(6)Sair, deslogar')
                 if ask2 == '1':
                     valor = float(input('\nQuanto voce deseja adicionar a sua conta: '))
                     descricao = input('\nDe uma descricao a sua transacao: ')
@@ -110,23 +111,34 @@ if __name__ == "__main__":
 
                 elif ask2 == '3':
                     todas_as_transacoes = pegar_historico_transacoes(conexao, id_logado)
+
+                    ask4 = int(input('\n(1)Voce gostaria de ver todas as suas transações: \n(2)Insira as datas que gostaria de filtrar as transacoes '))
                     
-                    for transacao in todas_as_transacoes:
-                        tipo = transacao[2]
-                        valor = transacao[3]
-                        descricao = transacao[4]
-                        data = transacao[5]
+                    if ask4 == 1:
+                        for transacao in todas_as_transacoes:
+                            tipo = transacao[2]
+                            valor = transacao[3]
+                            descricao = transacao[4]
+                            data = transacao[5]
 
                         print(f'\nTransacao no valor de {valor} com a descricao de {descricao} no dia {data}')
 
-                    ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim(Excel) \n(2)Sim(PDF) \n(3)Não'))   
+                        ask3 = int(input('\nVoce deseja levar esses dados a uma planilha ? \n(1)Sim(Excel) \n(2)Sim(PDF) \n(3)Não'))   
 
-                    if ask3 == 1:
-                        to_excel(todas_as_transacoes)
-                        print('\nPlanilha (financas.xlsx) criada com sucesso')
+                        if ask3 == 1:
+                          to_excel(todas_as_transacoes)
+                          print('\nPlanilha (financas.xlsx) criada com sucesso')
                     
-                    elif ask3 == 2:
-                        to_pdf(todas_as_transacoes)
+                        elif ask3 == 2:
+                          to_pdf(todas_as_transacoes)
+
+                    elif ask4 == 2:
+                        data_incial = input('Insira a data inical: ')
+                        data_final = input('Isira a data final: ')
+
+
+
+                    
 
                 elif ask2 == '4':
                     caminho_arquivo = input('Passe o caminho do arquivo do seu extrato: ')

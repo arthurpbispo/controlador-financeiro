@@ -124,5 +124,17 @@ def analise_extrato(extrato_dict):
             soma_dos_valores_entrada += i['Valor']
 
     print(f'\nNesse extrato voce fez essas transacoes Entrada: {soma_dos_valores_entrada:.2f} Saida: {soma_dos_valores_saida:.2f}')
+
+def tratar_data(data):
+    data_read = datetime.strptime(data, "%d/%m/%Y")
+
+    data_to_banco = data_read.strftime("%Y-%m-%d")
+
+    return data_to_banco
+
+
+    
+    
+    
             
 
